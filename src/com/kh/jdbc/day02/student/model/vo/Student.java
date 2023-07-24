@@ -1,5 +1,5 @@
 package com.kh.jdbc.day02.student.model.vo;
-
+// vo => 데이터를 저장하는 클래스
 import java.sql.Date;
 
 public class Student {
