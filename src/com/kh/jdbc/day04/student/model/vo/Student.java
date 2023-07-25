@@ -99,5 +99,4 @@ public class Student {
 				+ address + ", 취미=" + hobby + ", 등록일=" + enrollDate + "]";
 	}
 	
-	
 }

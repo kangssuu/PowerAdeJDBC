@@ -1,16 +1,12 @@
 package com.kh.jdbc.day04.student.common;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.sql.*;
-import java.util.Properties;
 
-public class JDBCTemplate {
-	
-	private Properties prop;
-	
+public class JDBCTemplate_old {
+	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
+	private final String URL = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
+	private final String USER = "student";
+	private final String PASSWORD = "student";
 	// 디자인 패턴 : 각기 다른 소프트웨어 모듈이나 기능을 가진 응용 SW를
 	// 개빌 할 때 공동되는 설게 문제를 해결하기 위하여 사용되는 턴임.
 	// => 효율적인 방식을 위함
@@ -36,19 +32,19 @@ public class JDBCTemplate {
 	
 	// 무조건 딱 한번만 생성되고 없을 때만 생성한다.
 	// 이미 존재하면 존재하는 객체를 사용함.
-	private static JDBCTemplate instance;
+	private static JDBCTemplate_old instance;
 	private static Connection conn;
 	
-	private JDBCTemplate() {
+	private JDBCTemplate_old() {
 		
 	}
 	
-	public static JDBCTemplate getInstance() {  // 싱글톤 패턴 : 만들어져 있는거 사용하기
+	public static JDBCTemplate_old getInstance() {  // 싱글톤 패턴 : 만들어져 있는거 사용하기
 		// 이미 만들어져 있는지 체크하고
 		if (instance == null ) {
 			// 안만들어져 있으면 만들어서 사용하기
 			// JDBC객체 생성
-			instance = new JDBCTemplate();
+			instance = new JDBCTemplate_old();
 		}
 		// 만들어져 있으면 그거 사용하기
 		return instance;
@@ -57,46 +53,16 @@ public class JDBCTemplate {
 	// DBCP(DataBase Connection Pool)
 	public Connection createConnection() {
 		try {
-			prop = new Properties();
-			Reader reader = new FileReader("resources/dev.properties");
-			prop.load(reader);
-			String driverName = prop.getProperty("driverName");
-			String url = prop.getProperty("url");
-			String user = prop.getProperty("user");
-			String password = prop.getProperty("password");
 			if(conn == null || conn.isClosed()) {
-				Class.forName(driverName);
-				conn = DriverManager.getConnection(url, user, password);
-				conn.setAutoCommit(false);  // 오토 커밋 풀어줌
+				Class.forName(DRIVER_NAME);
+				conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return conn;
-	}
-	
-	public static void commit(Connection conn) {
-		try {
-			if(conn != null && !conn.isClosed()) conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void rollback(Connection conn) {
-		try {
-			if(conn != null && ! conn.isClosed()) conn.rollback();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void close() {

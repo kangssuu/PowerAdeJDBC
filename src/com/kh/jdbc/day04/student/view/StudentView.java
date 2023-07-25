@@ -16,7 +16,7 @@ public class StudentView {
 
 	public void startProgram() {
 		List<Student> sList = null;
-		Student student = null;
+		String studentId = "";
 		int result = 0;
 		end :
 		while (true) {
@@ -27,7 +27,7 @@ public class StudentView {
 				// SELECT COUNT(*) FROM STUDENT_TBL  => int로 받는 경우
 				sList = controller.selectAll();
 				if (!sList.isEmpty()) {
-					printAllStudent(sList);
+					printAllStudents(sList);
 				}
 				else {
 					displayError("데이터 조회에 실패하였습니다.");
@@ -35,8 +35,8 @@ public class StudentView {
 				break;
 			case 2:
 				// SELECT * FROM STUDENT_TBL WHERE STUDENT_ID = 'hong11'
-				String studentId = inputStdId("검색");
-				student = controller.selectOneById(studentId);
+				studentId = inputStdId("검색");
+				Student student = controller.selectOneById(studentId);
 				if(student != null) {
 					printStudent(student);
 				}
@@ -50,7 +50,7 @@ public class StudentView {
 				sList = controller.selectAllByName(studentName);
 //				if(sList.size() > 0)  // 사이즈로 리스트가 있는지 없는지 확인 하기도 함
 				if (!sList.isEmpty()) {
-					printAllStudent(sList);
+					printAllStudents(sList);
 				}
 				else {
 					displayError("데이터 조회에 실패하였습니다.");
@@ -83,7 +83,7 @@ public class StudentView {
 					}
 				}
 				else {
-					
+					displayError("데이터를 찾지 못했어요..");
 				}
 				break;
 			case 6:
@@ -154,6 +154,7 @@ public class StudentView {
 
 	private String inputStdName() {
 		Scanner sc = new Scanner(System.in);
+		System.out.println("===== 학생 이름으로 조회 =====");
 		System.out.print("검색할 이름 입력 : ");
 		String studentName= sc.next();
 		return studentName;
@@ -203,7 +204,7 @@ public class StudentView {
 		System.out.println("[서비스 실패] : " + message);
 	}
 
-	private void printAllStudent(List<Student> sList) {
+	private void printAllStudents(List<Student> sList) {
 		System.out.println("========= 학생 전체 조회 ============");
 		for (Student student : sList) {
 			System.out.printf("이름 : %s, 나이 : %s, 아이디 : %s, 성별 : %s, 이메일 : %s, 전화번호 : %s, 주소 : %s, 취미 : %s, 가입날짜 : %s\n"
